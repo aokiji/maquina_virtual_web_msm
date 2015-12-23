@@ -1,0 +1,6 @@
+[kbs-el5-rb187]
+name=kbs-el5-rb187
+enabled=1
+baseurl=http://centos.karan.org/el$releasever/ruby187/$basearch/
+gpgcheck=1
+gpgkey=http://centos.karan.org/RPM-GPG-KEY-karan.org.txt
