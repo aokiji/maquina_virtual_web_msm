@@ -1,6 +1,6 @@
 use Rex -feature => ['exec_autodie'];
 
-my $RUBY_VERSION => '1.8.7.299';
+my $RUBY_VERSION = '1.8.7.299';
 
 desc 'Configura el sistema entero para dar el servicio web';
 task 'ConfigurarMaquina', sub {
@@ -36,6 +36,7 @@ task 'InstalarRuby', sub {
 desc 'Instala Phusion Passenger';
 task 'InstalarPassenger', sub {
     InstalarRuby();
+    pkg 'gcc-c++', ensure => 'present';
     pkg 'ruby-devel', ensure => $RUBY_VERSION;
     run 'gem install passenger -v 3.0.9';
 };
