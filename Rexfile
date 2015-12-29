@@ -1,6 +1,7 @@
 use Rex -feature => ['exec_autodie'];
 
 my $RUBY_VERSION = '1.8.7.299';
+my $RAILS_ROOT   = '/home/multiser/tienda';
 
 desc 'Configura el sistema entero para dar el servicio web';
 task 'ConfigurarMaquina', sub {
@@ -11,8 +12,13 @@ task 'ConfigurarMaquina', sub {
 
 desc 'Configura la aplicacion web';
 task 'ConfigurarAplicacionWeb', sub {
+    
     pkg 'mysql-devel', ensure => 'present';
-    run 'bundle install', cwd => '/home/multiser/tienda';
+    run 'bundle install', cwd => $RAILS_ROOT;
+    run 'RAILS_ENV=production bundle exec rake db:create', cwd => $RAILS_ROOT;
+    run 'RAILS_ENV=production bundle exec rake db:migrate', cwd => $RAILS_ROOT;
+    run 'RAILS_ENV=production bundle exec rake db:seed', cwd => $RAILS_ROOT;
+    run 'RAILS_ENV=production bundle exec compass compile', cwd => $RAILS_ROOT;
     file '/etc/httpd/conf.d/web_oficina.conf', 'source' => 'archivos/web_oficina.conf';
     file '/home/multiser/ruby', ensure => 'directory';
     ln '/usr/lib64/ruby/gems/1.8/' => '/home/multiser/ruby/gems';
