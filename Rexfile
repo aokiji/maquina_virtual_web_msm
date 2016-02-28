@@ -62,11 +62,16 @@ task 'InstalarModPassenger', sub {
 
 desc 'Instala y prepara la base de datos para la web';
 task 'ConfigurarBDWeb', sub {
+    my $pass = do {
+        my $contenido = cat '/home/multiser/tienda/config/database.yml';
+        $contenido =~ m/username:\s*multiser_tienda.*password:\s*(\w*)/sm;
+        $1
+    };
     pkg [qw(mysql mysql-server)], ensure => 'present';
     service 'mysqld', ensure => 'started';
     run "mysqladmin -u root password 'root'", auto_die => 0;
     run q{mysql -u root --password=root <<< "}
-        . q{CREATE USER 'multiser_tienda'@'localhost' IDENTIFIED BY 'password';}
+        . q{CREATE USER 'multiser_tienda'@'localhost' IDENTIFIED BY '} . $pass . q{';}
         . q{GRANT ALL PRIVILEGES ON multiser_tienda.* TO 'multiser_tienda'@'localhost';}
         . q{GRANT ALL PRIVILEGES ON multiser_tienda_dev.* TO 'multiser_tienda'@'localhost';}
         . q{GRANT ALL PRIVILEGES ON multiser_tienda_test.* TO 'multiser_tienda'@'localhost';}
